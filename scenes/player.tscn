@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://ca0w060mx1xo6"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_wpcc5"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_i5kjq"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qqw2h"]
+radius = 0.4
+height = 1.8
+
+[node name="CharacterBody3D" type="CharacterBody3D"]
+script = ExtResource("1_wpcc5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_i5kjq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_qqw2h")
