@@ -27,6 +27,7 @@ var world_path: String = ""
 var texture_atlas: Texture
 var atlas_size: int
 var block_material: StandardMaterial3D
+var block_material_transparent: StandardMaterial3D
 
 
 # Chunks
@@ -156,6 +157,9 @@ func _load_blocks() -> void:
 	block_material.albedo_texture = texture_atlas
 	block_material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 
+	block_material_transparent = block_material.duplicate()
+	block_material_transparent.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	block_material_transparent.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
 func _generate() -> void:
 	world_path = "user://worlds/" + WORLD_NAME
 	DirAccess.make_dir_recursive_absolute(world_path + "/chunks")

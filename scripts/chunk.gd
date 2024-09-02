@@ -89,11 +89,20 @@ func is_face_visible(pos: Vector3i, direction: Vector3i) -> bool:
 
 func render() -> void: # Called only once to render chunk
 	var mesh = ArrayMesh.new()
+	
 	var vertices = PackedVector3Array()
+	var collision_vertices = PackedVector3Array()
 	var uvs = PackedVector2Array()
 	var normals = PackedVector3Array()
 	var indices = PackedInt32Array()
-	var index_offset = 0
+	var index_offset = 0 
+	
+	var vertices_t = PackedVector3Array()
+	var uvs_t = PackedVector2Array()
+	var normals_t = PackedVector3Array()
+	var indices_t = PackedInt32Array()
+	var index_offset_t = 0 
+	
 	var uv_size = (1.0/_world.atlas_size)
 	
 
@@ -104,29 +113,60 @@ func render() -> void: # Called only once to render chunk
 				var pos := Vector3(x,y,z)
 				if _data.has(pos_i):  # Only render if there's a block
 					var block_id: int = _data[pos_i]
+					var block: Block = _world.blocks[block_id]
 					if has_empty_neighbor(pos_i):
 						var uv_offset = _get_uv_offset(block_id, uv_size)
+						
+						var v: PackedVector3Array
+						var n: PackedVector3Array
+						var u: PackedVector2Array
+						var i: PackedInt32Array
+						var io: int
+						
+						if block.actually_transparent:
+							v = vertices_t
+							n = normals_t
+							u = uvs_t
+							i = indices_t
+							io = index_offset_t
+						else:
+							v = vertices
+							n = normals
+							u = uvs
+							i = indices
+							io = index_offset
+						
 						for face in BLOCK_FACE_DATA:
 							if not is_face_visible(pos,face.normal) and false: # Can't use this because else collision might fuck up
 								continue
 							
 							for vertex in face.vertices:
-								vertices.push_back(pos + vertex)
+								var temp: Vector3 = pos + vertex
+								if block.can_collide:
+									collision_vertices.push_back(temp)
+								v.push_back(temp)
+								if (block.actually_transparent): # THESE 2!
+									pass # DONT REMOVE THESE 2 LINES! BREAKS TRANSPARENT BLOCKS!
 							
-							for i in range(4):
-								normals.append(face.normal)
+							for j in range(4):
+								n.append(face.normal)
 							
 							for uv in face.uvs:
-								uvs.append(uv_offset + uv * uv_size)
+								u.append(uv_offset + uv * uv_size)
 							
-							indices.append(index_offset + 0)
-							indices.append(index_offset + 1)
-							indices.append(index_offset + 2)
-							indices.append(index_offset + 0)
-							indices.append(index_offset + 2)
-							indices.append(index_offset + 3)
+							i.append(io + 0)
+							i.append(io + 1)
+							i.append(io + 2)
+							i.append(io + 0)
+							i.append(io + 2)
+							i.append(io + 3)
 							
-							index_offset += 4
+							io += 4
+							
+							if block.actually_transparent:
+								index_offset_t = io
+							else:
+								index_offset = io
 					
 	var arrays = []
 	arrays.resize(Mesh.ARRAY_MAX)
@@ -137,11 +177,23 @@ func render() -> void: # Called only once to render chunk
 
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 	mesh.surface_set_material(0, _world.block_material)
+	
+	
+	if vertices_t.size() != 0:
+		var arrays_t = []
+		arrays_t.resize(Mesh.ARRAY_MAX)
+		arrays_t[Mesh.ARRAY_VERTEX] = vertices_t
+		arrays_t[Mesh.ARRAY_TEX_UV] = uvs_t
+		arrays_t[Mesh.ARRAY_NORMAL] = normals_t
+		arrays_t[Mesh.ARRAY_INDEX] = indices_t
+
+		mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays_t)
+		mesh.surface_set_material(1, _world.block_material_transparent)
 	_node.mesh = mesh
 	
 	# Funny collision stuff
 	var shape: ConcavePolygonShape3D = ConcavePolygonShape3D.new()
-	shape.set_faces(vertices) # error here
+	shape.set_faces(collision_vertices) # error here
 	_collision_shape.shape = shape
 
 func _get_uv_offset(block_id: int, uv_size) -> Vector2:

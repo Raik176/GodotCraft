@@ -6,7 +6,7 @@ extends Resource
 @export var texture: Texture2D = preload("res://assets/missing_texture.png")
 @export var color: Color = Color(1,1,1,1)
 @export var transparent: bool = false
-@export var collision_shape: Shape3D
+@export var can_collide: bool = true
 
 var numeric_id: int
 var actually_transparent: bool
