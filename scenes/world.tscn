@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c3nh1h13w3lvq"]
+[gd_scene load_steps=16 format=3 uid="uid://c3nh1h13w3lvq"]
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_0hfr3"]
 [ext_resource type="Script" path="res://scripts/resources/block.gd" id="2_y2xph"]
@@ -6,43 +6,115 @@
 [ext_resource type="Texture2D" uid="uid://bmjwi2vv3bcom" path="res://assets/blocks/bedrock.png" id="4_q2u7q"]
 [ext_resource type="Texture2D" uid="uid://cyukkepw471n1" path="res://assets/blocks/water.png" id="5_7mg3g"]
 [ext_resource type="PackedScene" uid="uid://ca0w060mx1xo6" path="res://scenes/player.tscn" id="6_hhrvr"]
+[ext_resource type="Texture2D" uid="uid://dexmmdn1y02ky" path="res://assets/missing_texture.png" id="6_stjun"]
 
 [sub_resource type="Resource" id="Resource_qw5nk"]
 script = ExtResource("2_y2xph")
 id = "stone"
 texture = ExtResource("3_51uy8")
+use_faced_texture = false
+same_side_texture = false
+front = ExtResource("6_stjun")
+back = ExtResource("6_stjun")
+left = ExtResource("6_stjun")
+right = ExtResource("6_stjun")
+top = ExtResource("6_stjun")
+bottom = ExtResource("6_stjun")
+side = ExtResource("6_stjun")
 color = Color(1, 1, 1, 1)
 transparent = false
-can_collide = null
+can_collide = true
+size = Vector3(1, 1, 1)
 
 [sub_resource type="Resource" id="Resource_3jb8c"]
 script = ExtResource("2_y2xph")
 id = "bedrock"
 texture = ExtResource("4_q2u7q")
+use_faced_texture = false
+same_side_texture = false
+front = ExtResource("6_stjun")
+back = ExtResource("6_stjun")
+left = ExtResource("6_stjun")
+right = ExtResource("6_stjun")
+top = ExtResource("6_stjun")
+bottom = ExtResource("6_stjun")
+side = ExtResource("6_stjun")
 color = Color(1, 1, 1, 1)
 transparent = false
-can_collide = null
+can_collide = true
+size = Vector3(1, 1, 1)
 
 [sub_resource type="Resource" id="Resource_v7k1y"]
 script = ExtResource("2_y2xph")
 id = "water"
 texture = ExtResource("5_7mg3g")
+use_faced_texture = false
+same_side_texture = false
+front = ExtResource("6_stjun")
+back = ExtResource("6_stjun")
+left = ExtResource("6_stjun")
+right = ExtResource("6_stjun")
+top = ExtResource("6_stjun")
+bottom = ExtResource("6_stjun")
+side = ExtResource("6_stjun")
 color = Color(1, 1, 1, 1)
 transparent = true
-can_collide = null
+can_collide = true
+size = Vector3(1, 0.8, 1)
+
+[sub_resource type="Resource" id="Resource_vs8ve"]
+script = ExtResource("2_y2xph")
+id = "dirt"
+texture = ExtResource("6_stjun")
+use_faced_texture = false
+same_side_texture = false
+front = ExtResource("6_stjun")
+back = ExtResource("6_stjun")
+left = ExtResource("6_stjun")
+right = ExtResource("6_stjun")
+top = ExtResource("6_stjun")
+bottom = ExtResource("6_stjun")
+side = ExtResource("6_stjun")
+color = Color(1, 1, 1, 1)
+transparent = false
+can_collide = true
+size = Vector3(1, 1, 1)
+
+[sub_resource type="Resource" id="Resource_jv5km"]
+script = ExtResource("2_y2xph")
+id = "grass"
+texture = ExtResource("6_stjun")
+use_faced_texture = false
+same_side_texture = false
+front = ExtResource("6_stjun")
+back = ExtResource("6_stjun")
+left = ExtResource("6_stjun")
+right = ExtResource("6_stjun")
+top = ExtResource("6_stjun")
+bottom = ExtResource("6_stjun")
+side = ExtResource("6_stjun")
+color = Color(1, 1, 1, 1)
+transparent = false
+can_collide = true
+size = Vector3(1, 1, 1)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_5pnhs"]
-seed = 231950997
+seed = -452582757
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_5j5fx"]
+noise_type = 3
+seed = -452582757
+fractal_type = 3
 
 [sub_resource type="Environment" id="Environment_x5yg3"]
 
 [node name="World" type="Node3D" node_paths=PackedStringArray("chunk_render_center", "frustum_camera", "chunk_container")]
 transform = Transform3D(0.999891, 0, 0.0147649, 0, 1, 0, -0.0147649, 0, 0.999891, -0.0113678, 0.263527, 0.0799589)
 script = ExtResource("1_0hfr3")
-blocks = Array[ExtResource("2_y2xph")]([SubResource("Resource_qw5nk"), SubResource("Resource_3jb8c"), SubResource("Resource_v7k1y")])
-noises = Array[FastNoiseLite]([SubResource("FastNoiseLite_5pnhs")])
+blocks = Array[ExtResource("2_y2xph")]([SubResource("Resource_qw5nk"), SubResource("Resource_3jb8c"), SubResource("Resource_v7k1y"), SubResource("Resource_vs8ve"), SubResource("Resource_jv5km")])
+noises = Array[FastNoiseLite]([SubResource("FastNoiseLite_5pnhs"), SubResource("FastNoiseLite_5j5fx")])
 height_intensity = 20
-height_offset = 70
+height_offset = 73
 rendering_distance = 4
 chunk_render_center = NodePath("Player")
 frustum_camera = NodePath("Player/Camera3D")

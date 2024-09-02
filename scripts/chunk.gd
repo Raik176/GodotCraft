@@ -104,7 +104,6 @@ func render() -> void: # Called only once to render chunk
 	var index_offset_t = 0 
 	
 	var uv_size = (1.0/_world.atlas_size)
-	
 
 	for x in range(_world.CHUNK_SIZE.x):
 		for y in range(_world.CHUNK_SIZE.y):
@@ -141,7 +140,7 @@ func render() -> void: # Called only once to render chunk
 								continue
 							
 							for vertex in face.vertices:
-								var temp: Vector3 = pos + vertex
+								var temp: Vector3 = pos + (vertex * block.size)
 								if block.can_collide:
 									collision_vertices.push_back(temp)
 								v.push_back(temp)

@@ -3,17 +3,23 @@ extends EditorPlugin
 
 
 var editor_button_plugin:EditorButtonPlugin
+var block_editor_plugin:BlockEditorPlugin
 
 
 func _enter_tree() -> void:
 	editor_button_plugin = EditorButtonPlugin.new()
+	block_editor_plugin = BlockEditorPlugin.new()
 	add_inspector_plugin(editor_button_plugin)
+	add_inspector_plugin(block_editor_plugin)
 
 
 func _exit_tree() -> void:
 	if is_instance_valid(editor_button_plugin):
 		remove_inspector_plugin(editor_button_plugin)
 		editor_button_plugin = null
+		
+		remove_inspector_plugin(block_editor_plugin)
+		block_editor_plugin = null
 
 
 class EditorButtonPlugin extends EditorInspectorPlugin:

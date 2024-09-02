@@ -119,8 +119,11 @@ func _generate_chunk_blocks(chunk_pos: Vector2i) -> Dictionary:
 			var z = chunk_pos.y*CHUNK_SIZE.z + fakeZ
 			var height: int = floor(get_noise_average(x, z) 
 				* height_intensity + height_offset)
-			for y in range(LOWEST_POINT,height):
+			for y in range(LOWEST_POINT,height-5):
 				data[Vector3i(fakeX,y,fakeZ)] = get_block_numeric_id("stone")
+			for y in range(height-5,height):
+				data[Vector3i(fakeX,y,fakeZ)] = get_block_numeric_id("dirt")
+			data[Vector3i(fakeX,height,fakeZ)] = get_block_numeric_id("grass")
 			if height < 63:
 				for y in range(height, 63):
 					data[Vector3i(fakeX,y,fakeZ)] = get_block_numeric_id("water")
@@ -210,7 +213,8 @@ func _chunk_loading() -> void:
 					_unload_chunk(chunk_pos)
 			for x in range(center_chunk.x - rendering_distance, center_chunk.x + rendering_distance + 1):
 				for z in range(center_chunk.y - rendering_distance, center_chunk.y + rendering_distance + 1):
-					chunk_queue.offer(Vector2i(x, z))
+					if not frustum_camera.is_position_behind(Vector3(x,0,z)):
+						chunk_queue.offer(Vector2i(x, z))
 		await get_tree().create_timer(0.05).timeout
 
 func _chunk_render() -> void:
