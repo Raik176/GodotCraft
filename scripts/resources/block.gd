@@ -10,6 +10,8 @@ extends Resource
 
 var numeric_id: int
 var actually_transparent: bool
+var uv_offset: Vector2
+var uv_size: Vector2
 
 func setup(id: int) -> void:
 	numeric_id = id
